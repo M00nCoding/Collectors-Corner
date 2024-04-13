@@ -60,4 +60,7 @@ it can have a negative impact on the main repo and then we have to use our copie
 COPIES OF THE PROJECT FILE WE ARE WORKING ON OUR LOCAL MACHINES OR VM's.
 
 
+NOTICE TO TEAM:
+This is a master branch, it will be later readded to a main branch and fixed as soon as the VCS is fixed to rebase the project for pushing, please do not push or commit your changes, just open and use this file to code and leave the login and register layouts thanks,
+I will communicate with the team as soon as I managed to get a solution or until further notice, thanks.
 Regular updates and notifications will be made available here, thanks. 
