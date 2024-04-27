@@ -1,3 +1,19 @@
 <resources>
     <string name="app_name">CollectorsCorner</string>
+
+
+    <!-- activity_addgenre.xml strings added -->
+    <string name="title_add_genre">Add Genre</string>
+    <string name="hint_genre_name">Enter genre name</string>
+    <string name="hint_genre_goal">Set genre goal</string>
+    <string name="btn_add_genre">Add</string>
+
+    <!-- activity_addbook.xml strings added -->
+    <string name="title_add_book">Add Book</string>
+    <string name="btn_book_image">Take photo</string>
+    <string name="hint_book_title">Enter book title</string>
+    <string name="hint_book_description">Enter description</string>
+    <string name="hint_book_date_acquisition">Date of acquisition</string>
+    <string name="btn_select_date">Select</string>
+    <string name="btn_add_book">Add</string>
 </resources>

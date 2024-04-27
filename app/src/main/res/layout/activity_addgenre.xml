@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/background_2"
+    tools:context=".AddGenreActivity">
+
+
+    <TextView
+        android:id="@+id/addGenreTv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/title_add_genre"
+        android:fontFamily="@font/alegreya_sans_sc"
+        android:textStyle="bold"
+        android:textSize="50sp"
+        android:textColor="@color/white"
+        android:layout_marginTop="40dp"
+        android:layout_marginBottom="20dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+
+    <EditText
+        android:id = "@+id/genreNameEt"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:inputType = "text"
+        android:hint="@string/hint_genre_name"
+        android:textSize="20sp"
+        android:textColor="@color/black"
+        android:background="@drawable/input_bg"
+        android:backgroundTint="@color/white"
+        android:paddingStart="20dp"
+        android:paddingEnd="20dp"
+        android:paddingTop="10dp"
+        android:paddingBottom="10dp"
+        android:layout_marginStart="30dp"
+        android:layout_marginEnd="30dp"
+        android:layout_marginTop="30dp"
+        android:layout_marginBottom="30dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/addGenreTv"
+        />
+
+
+    <EditText
+        android:id = "@+id/genreGoalEt"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:inputType = "number"
+        android:hint="@string/hint_genre_goal"
+        android:textSize="20sp"
+        android:textColor="@color/black"
+        android:background="@drawable/input_bg"
+        android:backgroundTint="@color/white"
+        android:paddingStart="20dp"
+        android:paddingEnd="20dp"
+        android:paddingTop="10dp"
+        android:paddingBottom="10dp"
+        android:layout_marginStart="30dp"
+        android:layout_marginEnd="30dp"
+        android:layout_marginTop="30dp"
+        android:layout_marginBottom="30dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/genreNameEt"
+        />
+
+
+    <Button
+        android:id="@+id/addGenreBtn"
+        android:layout_width="320dp"
+        android:layout_height="60dp"
+        android:layout_marginTop="60dp"
+        android:text="@string/btn_add_genre"
+        android:textColor="@color/white"
+        android:backgroundTint="@color/lavender"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/genreGoalEt"
+        />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

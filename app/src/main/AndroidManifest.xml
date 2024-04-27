@@ -15,6 +15,28 @@
         android:theme="@style/Theme.CollectorsCorner"
         tools:targetApi="31">
 
+
+        <!-- Achievements Layout -->
+        <activity
+            android:name=".AchievementsActivity"
+            android:exported="false" />
+
+        <!-- AddGenre Layout -->
+        <activity
+            android:name=".AddGenreActivity"
+            android:exported="false" />
+
+        <!-- AddBook Layout -->
+        <activity
+            android:name=".AddBookActivity"
+            android:exported="false" />
+
+
+        <!-- BookInfo Layout -->
+        <activity
+            android:name=".BookInfoAvtivity"
+            android:exported="false" />
+
         <!-- LoginActivity Login Layout -->
         <activity
             android:name=".LoginActivity"
@@ -35,9 +57,9 @@
             android:name=".MainActivity"
             android:exported="true" />
 
-        <!-- HomeScreenActivity Home Screen Layout -->
+        <!-- HomeActivity Home Screen Layout -->
         <activity
-            android:name=".HomeScreenActivity"
+            android:name=".HomeActivity"
             android:exported="false" />
 
         <meta-data

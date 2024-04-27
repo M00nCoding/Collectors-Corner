@@ -76,7 +76,7 @@ class LoginActivity : AppCompatActivity() {
                                         startActivity(
                                             Intent(
                                                 this@LoginActivity,
-                                                HomeScreenActivity::class.java
+                                                HomeActivity::class.java
                                             )
                                         )
                                         finish()
