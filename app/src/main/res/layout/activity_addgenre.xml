@@ -89,4 +89,46 @@
         />
 
 
+    <LinearLayout
+        android:id="@+id/navigation_bar"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_gravity="bottom"
+        android:background="?attr/colorPrimary"
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toBottomOf="parent">
+
+
+        <!--Back to library page navigation-->
+        <Button
+            android:id="@+id/library_btn1"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:text="Library"
+            android:textColor="@android:color/white" />
+
+        <!--Achievements navigation-->
+        <Button
+            android:id="@+id/achievements_button"
+            android:layout_width="2dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:text="Achievement"
+            android:textColor="@android:color/white" />
+
+
+        <!--Adding book navigation-->
+        <Button
+            android:id="@+id/add_book_btn"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:text="Add Book"
+            android:textColor="@android:color/white" />
+
+    </LinearLayout>
+
+
+
 </androidx.constraintlayout.widget.ConstraintLayout>

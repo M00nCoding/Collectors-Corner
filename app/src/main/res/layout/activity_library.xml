@@ -17,32 +17,40 @@
         android:orientation="horizontal"
         app:layout_constraintBottom_toBottomOf="parent">
 
-    <Button
-        android:id="@+id/library_button"
-        android:layout_width="0dp"
-        android:layout_height="match_parent"
-        android:layout_weight="1"
-        android:text="Library"
-        android:textColor="@android:color/white" />
 
-    <Button
-        android:id="@+id/achievements_button"
-        android:layout_width="0dp"
-        android:layout_height="match_parent"
-        android:layout_weight="1"
-        android:text="Achievements"
-        android:textColor="@android:color/white" />
-
+        <!--Adding genre navigation-->
         <Button
-            android:id="@+id/genre_goals_button"
+        android:id="@+id/add_genre_btn"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:text="Add Genre"
+        android:textColor="@android:color/white" />
+
+        <!--Achievements navigation-->
+        <Button
+        android:id="@+id/achievements_button"
+        android:layout_width="2dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:text="Achievement"
+        android:textColor="@android:color/white" />
+
+
+        <!--Adding book navigation-->
+        <Button
+            android:id="@+id/add_book_btn"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:text="Genre Goals"
-            android:textColor="@color/white" />
+            android:text="Add Book"
+            android:textColor="@android:color/white" />
+
     </LinearLayout>
 
 
+
+<!--Change this to not be a button but to fetch information-->
     <Button
         android:id="@+id/books_collected"
         android:layout_width="180dp"
@@ -59,6 +67,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
 
+    <!--Change this to not be a button but to fetch information-->
     <Button
         android:id="@+id/total_categories"
         android:layout_width="180dp"
@@ -79,6 +88,7 @@
         android:layout_marginStart="168dp"
         android:layout_marginTop="24dp"
         android:text="Library"
+        android:textAlignment="center"
         android:textColor="@color/white"
         android:textSize="30sp"
         android:textStyle="bold"
@@ -129,6 +139,7 @@
         </LinearLayout>
     </ScrollView>
 
+    <!--
     <Button
         android:id="@+id/add_book_btn"
         android:layout_width="wrap_content"
@@ -138,8 +149,9 @@
         android:text="Add Book"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/library_title" />
+-->
 
-
+    <!--
     <Button
         android:id="@+id/add_genre_btn"
         android:layout_width="wrap_content"
@@ -149,6 +161,6 @@
         android:text="Add Genre"
         app:layout_constraintStart_toEndOf="@+id/add_book_btn"
         app:layout_constraintTop_toBottomOf="@+id/library_title" />
-
+-->
 
 </androidx.constraintlayout.widget.ConstraintLayout>
