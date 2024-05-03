@@ -2,17 +2,31 @@ package com.example.CollectorsCorner
 
 import android.content.Intent
 import android.os.Bundle
+import android.content.Context
 import androidx.appcompat.app.AppCompatActivity
 import android.widget.Toast
 import android.widget.Button
 
+
 class HomeActivity : AppCompatActivity() {
+
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_library)
 
-        // Display a success message when user has been successfully logged in
-        Toast.makeText(this, "Logged in successfully!", Toast.LENGTH_SHORT).show()
+        // Check if the user has logged in previously
+        val isLoggedIn = getSharedPreferences("user_prefs", Context.MODE_PRIVATE)
+            .getBoolean("isLoggedIn", false)
+
+        // Display a success message when user has been successfully logged in for the first time
+        if (!isLoggedIn) {
+            Toast.makeText(this, "Logged in successfully!", Toast.LENGTH_SHORT).show()
+            // Save the login status to SharedPreferences
+            getSharedPreferences("user_prefs", Context.MODE_PRIVATE).edit()
+                .putBoolean("isLoggedIn", true).apply()
+        }
 
 
         // Set OnClickListener for navigating to the add genre page
@@ -36,6 +50,9 @@ class HomeActivity : AppCompatActivity() {
             val intent = Intent(this, AchievementsActivity::class.java)
             startActivity(intent)
         }
+
+
+
 
     }
 }

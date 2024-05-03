@@ -8,6 +8,9 @@
     android:background="@drawable/bp">
 
 
+
+
+
     <LinearLayout
         android:id="@+id/navigation_bar"
         android:layout_width="match_parent"
@@ -45,6 +48,7 @@
             android:layout_weight="1"
             android:text="Add Book"
             android:textColor="@android:color/white" />
+
 
     </LinearLayout>
 
@@ -139,28 +143,6 @@
         </LinearLayout>
     </ScrollView>
 
-    <!--
-    <Button
-        android:id="@+id/add_book_btn"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="24dp"
-        android:layout_marginTop="572dp"
-        android:text="Add Book"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/library_title" />
--->
 
-    <!--
-    <Button
-        android:id="@+id/add_genre_btn"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="128dp"
-        android:layout_marginTop="572dp"
-        android:text="Add Genre"
-        app:layout_constraintStart_toEndOf="@+id/add_book_btn"
-        app:layout_constraintTop_toBottomOf="@+id/library_title" />
--->
 
 </androidx.constraintlayout.widget.ConstraintLayout>
