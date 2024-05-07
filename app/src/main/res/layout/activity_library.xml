@@ -51,37 +51,41 @@
 
 
     </LinearLayout>
+<!--End of navigation bar-->
 
 
-
-<!--Change this to not be a button but to fetch information-->
-    <Button
+    <!-- Display the total books collected -->
+    <TextView
         android:id="@+id/books_collected"
         android:layout_width="180dp"
         android:layout_height="112dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="92dp"
         android:layout_marginEnd="8dp"
+        android:background="@drawable/rounded_corner_background"
         android:text="Total Books Collected:"
-        android:textSize="20sp"
+        android:textColor="@android:color/white"
+        android:textSize="18sp"
         android:textStyle="bold"
         app:layout_constraintEnd_toStartOf="@+id/total_categories"
-        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
 
-    <!--Change this to not be a button but to fetch information-->
-    <Button
+    <!-- Display the total categories -->
+    <TextView
         android:id="@+id/total_categories"
         android:layout_width="180dp"
         android:layout_height="112dp"
-        android:layout_marginTop="0dp"
+        android:layout_marginStart="8dp"
         android:layout_marginEnd="8dp"
+        android:background="@drawable/rounded_corner_background"
         android:text="Total Categories:"
-        android:textSize="20sp"
+        android:textColor="@android:color/white"
+        android:textSize="18sp"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/books_collected"
         app:layout_constraintTop_toTopOf="@id/books_collected" />
 
 
@@ -99,6 +103,9 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
+
+    <!-- this is removed as this feature will be added later to the library or home page and
+    other layout pages for the user to have control over their account settings
     <ImageButton
         android:id="@+id/Profile"
         android:layout_width="50dp"
@@ -110,11 +117,22 @@
         app:layout_constraintStart_toEndOf="@+id/logo"
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/dp" />
+-->
+
+    <ImageButton
+        android:id="@+id/logout_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="24dp"
+        android:src="@drawable/logout_icon"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <ImageView
         android:id="@+id/logo"
-        android:layout_width="50dp"
-        android:layout_height="48dp"
+        android:layout_width="100dp"
+        android:layout_height="65dp"
         android:layout_marginStart="24dp"
         android:layout_marginTop="16dp"
         app:layout_constraintStart_toStartOf="parent"
@@ -135,6 +153,7 @@
         app:layout_constraintVertical_bias="0.681">
 
         <LinearLayout
+            android:id="@+id/linearLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
@@ -143,6 +162,16 @@
         </LinearLayout>
     </ScrollView>
 
-
+    <Button
+        android:id="@+id/refresh_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:layout_marginBottom="16dp"
+        android:text="Refresh List of Books"
+        app:layout_constraintBottom_toTopOf="@+id/navigation_bar"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/scrollView" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

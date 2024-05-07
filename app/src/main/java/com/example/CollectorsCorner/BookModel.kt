@@ -1,7 +1,5 @@
 package com.example.CollectorsCorner
 
-import android.net.Uri
-
 data class BookModel(
     var bookId : String? = null,
     var bookTitle : String? = null,

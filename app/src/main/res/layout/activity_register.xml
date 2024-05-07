@@ -107,6 +107,7 @@
         android:paddingTop="10dp"
         android:paddingRight="10dp"
         android:paddingBottom="10dp"
+        android:textColor="#FAF6F6"
         android:textColorHint="#FAF5F5"
         android:textSize="20sp"
         android:textStyle="bold"

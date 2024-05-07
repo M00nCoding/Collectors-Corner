@@ -12,17 +12,24 @@ import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
+import android.text.InputType
+import android.widget.CheckBox
 
 class LoginActivity : AppCompatActivity() {
 
     private lateinit var auth: FirebaseAuth
+    // declaring the checkbox variable
+    private lateinit var passwordToggleButton: CheckBox
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
 
         auth = FirebaseAuth.getInstance()
 
+        // Initialize CheckBox
+        passwordToggleButton = findViewById(R.id.password_toggle_checkbox)
 
+// declaring the declarations used
         val signUpTextView: TextView = findViewById(R.id.textViewSignUp)
         val loginButton: Button = findViewById(R.id.btnlogin)
         val usernameEditText: EditText = findViewById(R.id.username_edittext)
@@ -51,7 +58,25 @@ class LoginActivity : AppCompatActivity() {
             signInUser(username, password)
 
         }
+// Add listener for password toggle checkbox
+        passwordToggleButton.setOnCheckedChangeListener { _, isChecked ->
+            if (isChecked) {
+                // Showing the password
+                passwordEditText.inputType = InputType.TYPE_CLASS_TEXT
+            } else {
+                // Hiding the password
+                passwordEditText.inputType =
+                    InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_PASSWORD
+            }
+        }
+
     }
+
+
+
+
+
+
 
     private fun signInUser(username: String, password: String) {
         // Get a reference to the "User" node in the database

@@ -5,7 +5,7 @@ import android.app.Activity
 import android.app.DatePickerDialog
 import android.content.Intent
 import android.graphics.Bitmap
-import android.net.Uri
+//import android.net.Uri not used
 import android.os.Bundle
 import android.provider.MediaStore
 import android.widget.Button
@@ -20,27 +20,27 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.ktx.Firebase
-import com.google.firebase.storage.FirebaseStorage
+//import com.google.firebase.storage.FirebaseStorage not used
 import com.google.firebase.storage.ktx.storage
 import java.io.ByteArrayOutputStream
-import java.net.URL
+//import java.net.URL not used
 import java.util.Calendar
-import java.util.UUID
+//import java.util.UUID not used
 
 class AddBookActivity: AppCompatActivity() {
 
     //Declarations
-    private lateinit var ivBookImage : ImageView
-    private lateinit var btnCamera : Button
-    private lateinit var etBookTitle : EditText
-    private lateinit var etBookDescription : EditText
-    private lateinit var tvBookDateAcquisition : TextView
-    private lateinit var btnBookDateAcquisition : Button
-    private lateinit var spinnerBookGenre : Spinner
-    private lateinit var btnAddBook : Button
+    private lateinit var ivBookImage: ImageView
+    private lateinit var btnCamera: Button
+    private lateinit var etBookTitle: EditText
+    private lateinit var etBookDescription: EditText
+    private lateinit var tvBookDateAcquisition: TextView
+    private lateinit var btnBookDateAcquisition: Button
+    private lateinit var spinnerBookGenre: Spinner
+    private lateinit var btnAddBook: Button
 
     private lateinit var imageBitmap: Bitmap
-    private lateinit var imageUrl : String
+    //private lateinit var imageUrl: String
 
     private lateinit var dbRef: DatabaseReference
     private lateinit var auth: FirebaseAuth
@@ -129,8 +129,56 @@ class AddBookActivity: AppCompatActivity() {
         }
     }
 
-    private fun uploadBitmapToFirebase(bitmap: Bitmap, imageName: String) {
 
+    //Save book data function
+    private fun saveBookData() {
+
+        // Get values from fields
+        val bookTitle = etBookTitle.text.toString()
+        val bookDescription = etBookDescription.text.toString()
+        val bookDateAcquisition = tvBookDateAcquisition.text.toString()
+
+        // Upload the image to Firebase Storage and get the download URL
+        uploadBitmapToFirebase(imageBitmap, bookTitle) { imageUrl ->
+            // Create a unique Book Id
+            val bookId = dbRef.push().key!!
+
+            //Auth
+            auth = FirebaseAuth.getInstance()
+
+
+            // Gets the User Id
+            val uid = auth.currentUser?.uid.toString()
+
+
+            // Insert values into the BookModel class
+            val book =
+                BookModel(bookId, bookTitle, bookDescription, bookDateAcquisition, imageUrl, uid)
+
+
+            // Insert book data into the firebase real-time database
+            dbRef.child(bookId).setValue(book)
+                .addOnCompleteListener {
+                    // Display message if inserting the book data was successful
+                    Toast.makeText(this, "Book added successfully!", Toast.LENGTH_LONG).show()
+
+                    // Clear fields
+                    etBookTitle.text.clear()
+                    etBookDescription.text.clear()
+                    tvBookDateAcquisition.setText("")
+                }.addOnFailureListener { err ->
+                    // Display message if inserting the book data was not successful
+                    Toast.makeText(this, "Error ${err.message}", Toast.LENGTH_LONG).show()
+                }
+        }
+    }
+
+    // Upload bitmap to Firebase Storage and get download URL
+    private fun uploadBitmapToFirebase(
+        bitmap: Bitmap,
+        imageName: String,
+        callback: (String) -> Unit
+    ) {
         // Create a reference to the Firebase Storage location
         val storageReference = Firebase.storage.reference.child("images/$imageName.jpg")
 
@@ -141,54 +189,27 @@ class AddBookActivity: AppCompatActivity() {
 
         // Upload image to Firebase Storage
         storageReference.putBytes(data)
-
-        //Get image URL
-        imageUrl = storageReference.downloadUrl.toString()
-
-    }
-
-    //Save book data function
-    private fun saveBookData(){
-
-        //Get values from fields
-        val bookTitle = etBookTitle.text.toString()
-        val bookDescription = etBookDescription.text.toString()
-        val bookDateAcquisition = tvBookDateAcquisition.text.toString()
-
-        uploadBitmapToFirebase(imageBitmap, bookTitle)
-
-        //Auth
-        auth = FirebaseAuth.getInstance()
-
-        //Image URL
-        val imageUrl = imageUrl
-
-        //Creates a unique Book Id
-        val bookId = dbRef.push().key!!
-
-        //Gets the User Id
-        val uid = auth.currentUser?.uid.toString()
-
-        //Insert values into the BookModel class
-        val book = BookModel(bookId, bookTitle, bookDescription, bookDateAcquisition, imageUrl, uid)
-
-        //Insert book data into the firebase real-time database
-        dbRef.child(bookId).setValue(book)
-            .addOnCompleteListener{
-                //Display message if inserting the book data was successful
-                Toast.makeText(this, "Book added successfully!", Toast.LENGTH_LONG).show()
-
-                //Clear fields
-                etBookTitle.text.clear()
-                etBookDescription.text.clear()
-                tvBookDateAcquisition.setText("")
-
-            }.addOnFailureListener{ err ->
-                //Display message if inserting the book data was not successful
-                Toast.makeText(this, "Error ${err.message}", Toast.LENGTH_LONG).show()
+            .addOnSuccessListener { taskSnapshot ->
+                // Get the download URL for the image
+                storageReference.downloadUrl.addOnSuccessListener { uri ->
+                    val imageUrl = uri.toString() // Store the download URL in a variable
+                    callback(imageUrl) // Pass the download URL to the callback function
+                }.addOnFailureListener { exception ->
+                    // Handle any errors
+                    Toast.makeText(
+                        this@AddBookActivity,
+                        "Failed to get download URL: ${exception.message}",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
+            }.addOnFailureListener { exception ->
+                // Handle any errors
+                Toast.makeText(
+                    this@AddBookActivity,
+                    "Failed to upload image: ${exception.message}",
+                    Toast.LENGTH_SHORT
+                ).show()
             }
-
     }
-
 }
 
