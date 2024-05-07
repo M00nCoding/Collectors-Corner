@@ -6,5 +6,6 @@ data class BookModel(
     var bookDescription : String? = null,
     var bookDateAcquisition : String? = null,
     var imageUrl : String? = null,
+    var genre: String? = null,  // Newly added genre field
     var uid: String? = null
 )

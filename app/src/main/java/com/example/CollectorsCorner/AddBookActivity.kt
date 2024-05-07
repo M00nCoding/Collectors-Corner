@@ -5,6 +5,7 @@ import android.app.Activity
 import android.app.DatePickerDialog
 import android.content.Intent
 import android.graphics.Bitmap
+import android.widget.ArrayAdapter
 //import android.net.Uri not used
 import android.os.Bundle
 import android.provider.MediaStore
@@ -46,6 +47,10 @@ class AddBookActivity: AppCompatActivity() {
     private lateinit var auth: FirebaseAuth
 
 
+    // Predefined list of genres
+    private val genres = listOf("Fantasy", "Science Fiction", "Mystery", "Romance", "Thriller", "Horror", "Non-fiction", "Biography", "History", "Self-help")
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_addbook)
@@ -72,6 +77,21 @@ class AddBookActivity: AppCompatActivity() {
                     imageBitmap = bitmap
                 }
             }
+
+
+        // Populate spinner with predefined genres
+        val genresWithPrompt = mutableListOf("Select Genre")
+        genresWithPrompt.addAll(genres)
+        val adapter = ArrayAdapter(
+            this,
+            android.R.layout.simple_spinner_item,
+            genresWithPrompt
+        )
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        spinnerBookGenre.adapter = adapter
+        spinnerBookGenre.setSelection(0)
+
+
 
         //Opens the camera
         btnCamera.setOnClickListener {
@@ -102,7 +122,9 @@ class AddBookActivity: AppCompatActivity() {
 
         //Set on click listener to the Add Book button
         btnAddBook.setOnClickListener {
-            saveBookData()
+            if (validateInputs()) {
+                saveBookData()
+            }
         }
 
 
@@ -129,6 +151,41 @@ class AddBookActivity: AppCompatActivity() {
         }
     }
 
+// function for user validation checks
+    private fun validateInputs(): Boolean {
+        val bookTitle = etBookTitle.text.toString().trim()
+        val bookDescription = etBookDescription.text.toString().trim()
+        val bookDateAcquisition = tvBookDateAcquisition.text.toString().trim()
+        val selectedGenre = spinnerBookGenre.selectedItem.toString()
+
+        if (bookTitle.isEmpty()) {
+            etBookTitle.error = "Enter Book Title"
+            return false
+        }
+
+        if (bookDescription.isEmpty()) {
+            etBookDescription.error = "Enter Description"
+            return false
+        }
+
+        if (bookDateAcquisition.isEmpty()) {
+            Toast.makeText(this, "Select Date of Acquisition", Toast.LENGTH_SHORT).show()
+            return false
+        }
+
+        if (selectedGenre == "Select Genre") {
+            Toast.makeText(this, "Select Genre", Toast.LENGTH_SHORT).show()
+            return false
+        }
+
+        if (!::imageBitmap.isInitialized) {
+            Toast.makeText(this, "Please take a photo of your book cover", Toast.LENGTH_SHORT).show()
+            return false
+        }
+
+        return true
+    }
+
 
     //Save book data function
     private fun saveBookData() {
@@ -137,6 +194,7 @@ class AddBookActivity: AppCompatActivity() {
         val bookTitle = etBookTitle.text.toString()
         val bookDescription = etBookDescription.text.toString()
         val bookDateAcquisition = tvBookDateAcquisition.text.toString()
+        val selectedGenre = spinnerBookGenre.selectedItem.toString()
 
         // Upload the image to Firebase Storage and get the download URL
         uploadBitmapToFirebase(imageBitmap, bookTitle) { imageUrl ->
@@ -153,7 +211,7 @@ class AddBookActivity: AppCompatActivity() {
 
             // Insert values into the BookModel class
             val book =
-                BookModel(bookId, bookTitle, bookDescription, bookDateAcquisition, imageUrl, uid)
+                BookModel(bookId, bookTitle, bookDescription, bookDateAcquisition, imageUrl, selectedGenre, uid)
 
 
             // Insert book data into the firebase real-time database
@@ -162,10 +220,13 @@ class AddBookActivity: AppCompatActivity() {
                     // Display message if inserting the book data was successful
                     Toast.makeText(this, "Book added successfully!", Toast.LENGTH_LONG).show()
 
+
                     // Clear fields
                     etBookTitle.text.clear()
                     etBookDescription.text.clear()
-                    tvBookDateAcquisition.setText("")
+                    tvBookDateAcquisition.text = "" // Clear the date acquisition text
+                    spinnerBookGenre.setSelection(0) // Reset spinner selection
+                    ivBookImage.setImageResource(R.drawable.cover) // Reset image to default
                 }.addOnFailureListener { err ->
                     // Display message if inserting the book data was not successful
                     Toast.makeText(this, "Error ${err.message}", Toast.LENGTH_LONG).show()

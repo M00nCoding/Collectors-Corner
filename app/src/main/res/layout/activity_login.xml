@@ -105,12 +105,13 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/imageView" />
 
+    <!--The forgot password feature will be added as part of the POE final-->
     <TextView
         android:id="@+id/forgotPassword"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="15dp"
-        android:text="Forgot Password?"
+        android:text=""
         android:textColor="@color/white"
         android:textSize="18sp"
         android:textStyle="bold"
