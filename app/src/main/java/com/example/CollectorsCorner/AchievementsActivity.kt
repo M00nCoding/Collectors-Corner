@@ -2,14 +2,62 @@ package com.example.CollectorsCorner
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.widget.Button
+import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.*
 
 class AchievementsActivity: AppCompatActivity() {
+
+// TAG predefined
+    companion object {
+        private const val TAG = "AchievementsActivity"
+    }
+
+    // Declared variables used
+    private lateinit var database: DatabaseReference
+    private lateinit var pieChartView: PieChartView
+    private lateinit var auth: FirebaseAuth
+    private lateinit var goalNameTextView: TextView
+    private lateinit var totalBooksCollectedTextView: TextView
+    private lateinit var totalGenresAchievedTextView: TextView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_achievements)
+
+        pieChartView = findViewById(R.id.pie_chart)
+        goalNameTextView = findViewById(R.id.goal_name)
+        totalBooksCollectedTextView = findViewById(R.id.total_books_collected)
+        totalGenresAchievedTextView = findViewById(R.id.total_genres_achieved)
+        auth = FirebaseAuth.getInstance()
+        val currentUser = auth.currentUser
+
+
+        if (currentUser != null) {
+            val uid = currentUser.uid
+            database = FirebaseDatabase.getInstance().reference
+            loadAchievementProgress(uid)
+            loadTotalBooksCollected(uid)
+            loadTotalGenresAchieved(uid)
+        }
+
+// PLEASE LEAVE THIS AS THIS CAN BE REUSED IN THE FUTURE THANKS
+        /*// Check if user is logged in
+        if (currentUser != null) {
+            val uid = currentUser.uid
+            database = FirebaseDatabase.getInstance().getReference("Achievements").child(uid)
+
+            loadAchievementProgress()
+        }*/
+
+        /* // Firebase reference
+        database = FirebaseDatabase.getInstance().getReference("users").child("user_id_123")
+            .child("achievements_progress")
+*/
 
         // Set OnClickListener for the "Library" button to navigate back
         findViewById<Button>(R.id.library_btn2).setOnClickListener {
@@ -33,5 +81,140 @@ class AchievementsActivity: AppCompatActivity() {
             startActivity(intent)
         }
 
+        // Refresh button for reloading the functions set
+        findViewById<Button>(R.id.refresh_button).setOnClickListener {
+            val uid = currentUser?.uid ?: return@setOnClickListener
+            loadAchievementProgress(uid)
+            loadTotalBooksCollected(uid)
+            loadTotalGenresAchieved(uid)
+        }
+    }
+
+
+    // start of the load achievements progress for the percentages as the user adds books with the genre goal that was set
+    private fun loadAchievementProgress(uid: String) {
+        val genreRef = database.child("Genre").orderByChild("uid").equalTo(uid)
+
+        genreRef.addListenerForSingleValueEvent(object : ValueEventListener {
+            override fun onDataChange(genreSnapshot: DataSnapshot) {
+                var activeGenre = genreSnapshot.children.firstOrNull { genre ->
+                    val goal =
+                        genre.child("genreGoal").getValue(String::class.java)?.toIntOrNull() ?: 0
+                    val progress = genre.child("progress").getValue(Int::class.java) ?: 0
+                    progress < goal
+                }
+
+                if (activeGenre == null) {
+                    activeGenre = genreSnapshot.children.firstOrNull { genre ->
+                        val goal =
+                            genre.child("genreGoal").getValue(String::class.java)?.toIntOrNull()
+                                ?: 0
+                        val progress = genre.child("progress").getValue(Int::class.java) ?: 0
+                        progress >= goal
+                    }
+                    if (activeGenre == null) {
+                        Toast.makeText(
+                            this@AchievementsActivity,
+                            "No active genre goals. Please add a new goal.",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                        pieChartView.setProgressData(emptyMap())
+                        goalNameTextView.text = "Current Goal: No active goal"
+                        return
+                    }
+                }
+
+                val genreName =
+                    activeGenre.child("genreName").getValue(String::class.java) ?: return
+                val genreGoal =
+                    activeGenre.child("genreGoal").getValue(String::class.java)?.toIntOrNull()
+                        ?: return
+
+                goalNameTextView.text = getString(R.string.current_goal, genreName)
+
+                val booksRef = database.child("Book").orderByChild("uid").equalTo(uid)
+
+                booksRef.addListenerForSingleValueEvent(object : ValueEventListener {
+                    override fun onDataChange(bookSnapshot: DataSnapshot) {
+                        val progress = bookSnapshot.children.count { book ->
+                            val genre = book.child("genre").getValue(String::class.java) ?: ""
+                            genre == genreName
+                        }
+
+                        val percentage = if (genreGoal > 0) {
+                            ((progress.toFloat() / genreGoal) * 100).toInt()
+                        } else {
+                            0
+                        }
+
+                        Log.d(
+                            TAG,
+                            "Genre: $genreName, Goal: $genreGoal, Progress: $progress, Calculated Percentage: $percentage"
+                        )
+
+                        pieChartView.setProgressData(mapOf(genreName to percentage))
+
+                        activeGenre.ref.child("progress").setValue(progress)
+                    }
+
+                    override fun onCancelled(error: DatabaseError) {
+                        Log.e(TAG, "Failed to load books: ${error.message}")
+                        Toast.makeText(
+                            this@AchievementsActivity,
+                            "Failed to load books",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }
+                })
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                Log.e(TAG, "Failed to load genres: ${error.message}")
+                Toast.makeText(
+                    this@AchievementsActivity,
+                    "Failed to load genres",
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
+        })
+    }
+
+
+    // start of the load total books collected function to display inside the activity_achievements.xml layout file
+    private fun loadTotalBooksCollected(uid: String) {
+        val booksRef = database.child("Book").orderByChild("uid").equalTo(uid)
+
+        booksRef.addListenerForSingleValueEvent(object : ValueEventListener {
+            override fun onDataChange(bookSnapshot: DataSnapshot) {
+                val totalBooks = bookSnapshot.childrenCount.toInt()
+                totalBooksCollectedTextView.text = getString(R.string.total_books_collected, totalBooks)
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                Log.e(TAG, "Failed to load total books: ${error.message}")
+                Toast.makeText(this@AchievementsActivity, "Failed to load total books", Toast.LENGTH_SHORT).show()
+            }
+        })
+    }
+
+    // start of the load total genres achieved to display the achieved goals so far inside the activity_achievements.xml layout file
+    private fun loadTotalGenresAchieved(uid: String) {
+        val genreRef = database.child("Genre").orderByChild("uid").equalTo(uid)
+
+        genreRef.addListenerForSingleValueEvent(object : ValueEventListener {
+            override fun onDataChange(genreSnapshot: DataSnapshot) {
+                val achievedGenres = genreSnapshot.children.count { genre ->
+                    val goal = genre.child("genreGoal").getValue(String::class.java)?.toIntOrNull() ?: 0
+                    val progress = genre.child("progress").getValue(Int::class.java) ?: 0
+                    progress >= goal
+                }
+                totalGenresAchievedTextView.text = getString(R.string.genres_achieved, achievedGenres)
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                Log.e(TAG, "Failed to load achieved genres: ${error.message}")
+                Toast.makeText(this@AchievementsActivity, "Failed to load achieved genres", Toast.LENGTH_SHORT).show()
+            }
+        })
     }
 }
