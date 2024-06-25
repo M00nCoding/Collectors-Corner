@@ -48,7 +48,7 @@ class AddBookActivity: AppCompatActivity() {
 
 
     // Predefined list of genres
-    private val genres = listOf("Fantasy", "Science Fiction", "Mystery", "Romance", "Thriller", "Horror", "Non-fiction", "Biography", "History", "Self-help")
+    private val genres = listOf( "Fiction","Fantasy", "Science Fiction", "Mystery", "Romance", "Thriller", "Horror", "Non-fiction", "Biography", "History", "Self-help")
 
 
     override fun onCreate(savedInstanceState: Bundle?) {

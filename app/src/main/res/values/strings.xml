@@ -24,8 +24,12 @@
     <string name="failed_to_load_total_books">Failed to load total books collected.</string>
     <string name="failed_to_load_total_genres">Failed to load total genres.</string>
 
-    <!-- added resources for the current goal and genres achieved -->
+    <!-- added resources for the current genre goal and genres achieved -->
     <string name="current_goal">Current Goal: %1$s</string>
     <string name="genres_achieved">Genres Achieved: %1$d</string>
+
+    <!-- activity_user_achievements.xml strings added -->
+    <string name="p_achievement">%d%%</string>
+    <string name="complete_achievement">Completed</string>
 
 </resources>

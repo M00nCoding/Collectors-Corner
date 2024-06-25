@@ -25,35 +25,29 @@
         app:layout_constraintTop_toTopOf="parent" />
 
 
-    <EditText
-        android:id = "@+id/genreNameEt"
+    <Spinner
+        android:id="@+id/genreNameSpinner"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:inputType = "text"
-        android:hint="@string/hint_genre_name"
-        android:textSize="20sp"
-        android:textColor="@color/black"
+        android:layout_marginStart="30dp"
+        android:layout_marginTop="44dp"
+        android:layout_marginEnd="30dp"
         android:background="@drawable/input_bg"
         android:backgroundTint="@color/white"
         android:paddingStart="20dp"
-        android:paddingEnd="20dp"
         android:paddingTop="10dp"
+        android:paddingEnd="20dp"
         android:paddingBottom="10dp"
-        android:layout_marginStart="30dp"
-        android:layout_marginEnd="30dp"
-        android:layout_marginTop="30dp"
-        android:layout_marginBottom="30dp"
-        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/addGenreTv"
-        />
-
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/addGenreTv" />
 
     <EditText
-        android:id = "@+id/genreGoalEt"
+        android:id="@+id/genreGoalEt"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:inputType = "number"
+        android:inputType="number"
         android:hint="@string/hint_genre_goal"
         android:textSize="20sp"
         android:textColor="@color/black"
@@ -69,25 +63,23 @@
         android:layout_marginBottom="30dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/genreNameEt"
-        />
+        app:layout_constraintTop_toBottomOf="@id/genreNameSpinner" />
 
 
     <Button
         android:id="@+id/addGenreBtn"
         android:layout_width="320dp"
         android:layout_height="60dp"
-        android:layout_marginTop="60dp"
+        android:layout_marginTop="24dp"
+        android:backgroundTint="@color/lavender"
         android:text="@string/btn_add_genre"
         android:textColor="@color/white"
-        android:backgroundTint="@color/lavender"
         android:textSize="20sp"
         android:textStyle="bold"
-        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/genreGoalEt"
-        />
-
+        app:layout_constraintHorizontal_bias="0.494"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/genreGoalEt" />
 
     <LinearLayout
         android:id="@+id/navigation_bar"
@@ -114,7 +106,7 @@
             android:layout_width="2dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:text="Achievement"
+            android:text="Genre Goals"
             android:textColor="@android:color/white" />
 
 

@@ -24,6 +24,7 @@ class AchievementsActivity: AppCompatActivity() {
     private lateinit var goalNameTextView: TextView
     private lateinit var totalBooksCollectedTextView: TextView
     private lateinit var totalGenresAchievedTextView: TextView
+    private var isRefreshPressed = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -81,13 +82,27 @@ class AchievementsActivity: AppCompatActivity() {
             startActivity(intent)
         }
 
-        // Refresh button for reloading the functions set
-        findViewById<Button>(R.id.refresh_button).setOnClickListener {
-            val uid = currentUser?.uid ?: return@setOnClickListener
-            loadAchievementProgress(uid)
-            loadTotalBooksCollected(uid)
-            loadTotalGenresAchieved(uid)
+        // Set OnClickListener for the "View User Achievements" button to navigate to UserAchievementsActivity
+        findViewById<Button>(R.id.view_user_achievements_btn).setOnClickListener {
+            val intent = Intent(this, UserAchievementsActivity::class.java)
+            startActivity(intent)
         }
+
+
+        // refresh button to refresh the data of the users achieved goals
+        findViewById<Button>(R.id.refresh_button).setOnClickListener {
+            if (!isRefreshPressed) {
+                val uid = currentUser?.uid ?: return@setOnClickListener
+                loadAchievementProgress(uid)
+                loadTotalBooksCollected(uid)
+                loadTotalGenresAchieved(uid)
+                Toast.makeText(this, "The data has been refreshed.", Toast.LENGTH_SHORT).show()
+                isRefreshPressed = true
+            } else {
+                Toast.makeText(this, "You can't do multiple clicks, the data has already been refreshed.", Toast.LENGTH_SHORT).show()
+            }
+        }
+
     }
 
 
@@ -97,38 +112,24 @@ class AchievementsActivity: AppCompatActivity() {
 
         genreRef.addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onDataChange(genreSnapshot: DataSnapshot) {
-                var activeGenre = genreSnapshot.children.firstOrNull { genre ->
-                    val goal =
-                        genre.child("genreGoal").getValue(String::class.java)?.toIntOrNull() ?: 0
+                // Find the first active genre goal
+                val activeGenre = genreSnapshot.children.firstOrNull { genre ->
+                    val goal = genre.child("genreGoal").getValue(String::class.java)?.toIntOrNull() ?: 0
                     val progress = genre.child("progress").getValue(Int::class.java) ?: 0
                     progress < goal
                 }
 
                 if (activeGenre == null) {
-                    activeGenre = genreSnapshot.children.firstOrNull { genre ->
-                        val goal =
-                            genre.child("genreGoal").getValue(String::class.java)?.toIntOrNull()
-                                ?: 0
-                        val progress = genre.child("progress").getValue(Int::class.java) ?: 0
-                        progress >= goal
-                    }
-                    if (activeGenre == null) {
-                        Toast.makeText(
-                            this@AchievementsActivity,
-                            "No active genre goals. Please add a new goal.",
-                            Toast.LENGTH_SHORT
-                        ).show()
-                        pieChartView.setProgressData(emptyMap())
-                        goalNameTextView.text = "Current Goal: No active goal"
-                        return
-                    }
+                    // No active genre goal found, update UI accordingly
+                    Toast.makeText(this@AchievementsActivity, "No active genre goals. Please add a new genre goal.", Toast.LENGTH_LONG).show()
+                    pieChartView.setProgressData(emptyMap())
+                    goalNameTextView.text = "Current Goal: No active goals set"
+                    return
                 }
 
-                val genreName =
-                    activeGenre.child("genreName").getValue(String::class.java) ?: return
-                val genreGoal =
-                    activeGenre.child("genreGoal").getValue(String::class.java)?.toIntOrNull()
-                        ?: return
+                // If an active genre goal is found, proceed to update the progress
+                val genreName = activeGenre.child("genreName").getValue(String::class.java) ?: return
+                val genreGoal = activeGenre.child("genreGoal").getValue(String::class.java)?.toIntOrNull() ?: return
 
                 goalNameTextView.text = getString(R.string.current_goal, genreName)
 
@@ -147,10 +148,7 @@ class AchievementsActivity: AppCompatActivity() {
                             0
                         }
 
-                        Log.d(
-                            TAG,
-                            "Genre: $genreName, Goal: $genreGoal, Progress: $progress, Calculated Percentage: $percentage"
-                        )
+                        Log.d(TAG, "Genre: $genreName, Goal: $genreGoal, Progress: $progress, Calculated Percentage: $percentage")
 
                         pieChartView.setProgressData(mapOf(genreName to percentage))
 
@@ -159,22 +157,14 @@ class AchievementsActivity: AppCompatActivity() {
 
                     override fun onCancelled(error: DatabaseError) {
                         Log.e(TAG, "Failed to load books: ${error.message}")
-                        Toast.makeText(
-                            this@AchievementsActivity,
-                            "Failed to load books",
-                            Toast.LENGTH_SHORT
-                        ).show()
+                        Toast.makeText(this@AchievementsActivity, "Failed to load books", Toast.LENGTH_SHORT).show()
                     }
                 })
             }
 
             override fun onCancelled(error: DatabaseError) {
                 Log.e(TAG, "Failed to load genres: ${error.message}")
-                Toast.makeText(
-                    this@AchievementsActivity,
-                    "Failed to load genres",
-                    Toast.LENGTH_SHORT
-                ).show()
+                Toast.makeText(this@AchievementsActivity, "Failed to load genres", Toast.LENGTH_SHORT).show()
             }
         })
     }
